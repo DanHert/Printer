@@ -65,9 +65,8 @@ int main(int argc, char* argv[]) {
   if (tcsetattr(USB, TCSANOW, &tty) != 0) {
     std::cout << "Error " << errno << " from tcsetattr" << std::endl;
   }
-
-  char outbuf[image.cols + 1];
-  outbuf[image.cols + 1] = 's';
+  int  num    = 0;
+  char outbuf = 0;
   namedWindow("Display window", WINDOW_NORMAL);
   for (int y = 0; y < image.rows; y++) {
     for (int x = 0; x < image.cols; x++) {
@@ -76,14 +75,16 @@ int main(int argc, char* argv[]) {
         color[0] = 0;
         color[2] = 0;
         image.at<Vec3b>(Point(x, y)) = color;
-        outbuf[x] = 0;
-      }else{
-        outbuf[x] = 1;
+        outbuf = 0;
+      } else {
+        outbuf = 1;
       }
+      write(USB, &outbuf, 1);
     }
     imshow("Display window", image);
     waitKey(100);
-    write(USB, &outbuf, (image.cols+2));
+    write(USB, "s", 1);
+    cout << image.cols + 2 << " the size" << endl;
     while (buf != 's') {
       n = read(USB, &buf, 1);
       cout << buf;
