@@ -1,0 +1,6 @@
+cmake_minimum_required (VERSION 2.6)
+project (printer)
+add_executable(printer main.cpp)
+find_package(OpenCV REQUIRED)
+message(STATUS "Using OpenCV version ${OpenCV_VERSION}")
+target_link_libraries(printer ${OpenCV_LIBS})
